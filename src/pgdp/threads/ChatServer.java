@@ -37,7 +37,7 @@ public class ChatServer {
                 int port = Integer.parseInt(s.substring(16));
                 ServerSocket serverSocket = new ServerSocket(port);
                 int count = 0;
-                while (count < 50) {
+                while (clients.size() < 50) {
                     System.out.println("Server waiting on port " + port + "...");
                     Socket socket = serverSocket.accept();
                     count++;
@@ -114,7 +114,7 @@ public class ChatServer {
                             socket.close();
                             break;
                         } catch (IOException e) {
-                            System.out.println("Couldnt close socket.");
+                            System.out.println("Could not close socket.");
                         }
                     }
                 } else if(msg.charAt(0) == '@') {
@@ -136,7 +136,15 @@ public class ChatServer {
                     sendToAll(msg);
             }
         } catch (IOException e) {
-            System.out.println("IO-Exception during communication.");
+            System.out.println("IO-Exception during communication, socket will be terminated.");
+            clients.remove(socket);
+            mapOfUsers.values().remove(socket);
+            //mapOfTimeStayed.
+            try {
+                socket.close();
+            } catch (IOException f){
+                System.out.println("Could not close socket.");
+            }
         }
     }
 
