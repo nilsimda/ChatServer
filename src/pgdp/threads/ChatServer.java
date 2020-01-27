@@ -37,7 +37,7 @@ public class ChatServer {
                 int port = Integer.parseInt(s.substring(16));
                 ServerSocket serverSocket = new ServerSocket(port);
                 int count = 0;
-                while (clients.size() < 50) {
+                while (!serverSocket.isClosed()) {
                     System.out.println("Server waiting on port " + port + "...");
                     Socket socket = serverSocket.accept();
                     count++;
