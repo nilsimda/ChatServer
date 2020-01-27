@@ -84,7 +84,7 @@ public class ChatServer {
                 PrintWriter writer = new PrintWriter(s.getOutputStream(), true);
                 writer.println(msg);
             } catch (IOException e) {
-                System.out.println("Couldnt get Outputstream.");
+                System.out.println("Could not get Outputstream or send message.");
             }
         }
     }
@@ -150,6 +150,13 @@ public class ChatServer {
             } catch (IOException f){
                 System.out.println("Could not close socket.");
             }
+        }
+    }
+    public void close(){
+        try {
+            serverSocket.close();
+        } catch (IOException e){
+            System.out.println("Could not close ServerSocket.");
         }
     }
     private String getUserName(Socket socket){
