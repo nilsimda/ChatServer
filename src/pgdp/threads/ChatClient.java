@@ -18,6 +18,10 @@ public class ChatClient {
         System.out.println("Which ChatServer would you like to connect to?");
         Scanner clientInput = new Scanner(System.in);
         String input = clientInput.nextLine();
+        if(input.length() < 15) {
+            System.out.print("Input was too small.");
+            return;
+        }
         String firstPart = input.substring(0, 15);
         if(!input.equals("java ChatClient") && firstPart.equals("java ChatClient")){
             String[] arr = input.split(" ");

@@ -18,7 +18,7 @@ public class ChatServer {
     }
 
     public void waitForConnections() {
-        System.out.println("Waiting to start Server...");
+        System.out.println("Which server would you like to start?");
         Scanner openServerReq = new Scanner(System.in);
         String s = openServerReq.nextLine();
         if (s.length() < 15) {
@@ -104,6 +104,7 @@ public class ChatServer {
             while (true) {
                 String msg = reader.readLine();
                 if (msg.equals("PENGU")) {
+                    System.out.println("Cool Penguin Fact!");
                     sendToAll("Cool Penguin Fact!");
                 } else if (msg.equals("LOGOUT")) {
                     synchronized (ChatServer.class) {
@@ -132,14 +133,18 @@ public class ChatServer {
                         writer.println(entry.getKey() +" since " + entry.getValue());
                     });
                 }
-                else
-                    sendToAll(msg);
+                else {
+                    System.out.println(username + ": " + msg);
+                    sendToAll(username + ": " + msg);
+                }
             }
         } catch (IOException e) {
             System.out.println("IO-Exception during communication, socket will be terminated.");
-            clients.remove(socket);
-            mapOfUsers.values().remove(socket);
-            //mapOfTimeStayed.
+            synchronized (ChatServer.class) {
+                clients.remove(socket);
+                mapOfTimeStayed.remove(getUserName(socket));
+                mapOfUsers.values().remove(socket);
+            }
             try {
                 socket.close();
             } catch (IOException f){
@@ -147,7 +152,15 @@ public class ChatServer {
             }
         }
     }
-
+    private String getUserName(Socket socket){
+        Optional<Map.Entry<String, Socket>> opt = mapOfUsers.entrySet().stream().filter(entry ->{
+            if(entry.getValue().equals(socket))
+                return true;
+            else
+                return false;
+        }).findFirst();
+        return opt.get().getKey();
+    }
     public static void main(String[] args) {
         try {
             ChatServer chatServer = new ChatServer(new ServerSocket(), new ArrayList<>());
