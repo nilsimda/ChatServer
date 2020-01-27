@@ -40,7 +40,11 @@ public class ChatClient {
             try {
                 client = new Socket(arr[3], Integer.parseInt(arr[2]));
                 System.out.println("Enter UserName:");
-                String userName = clientInput.nextLine();
+                String userName = clientInput.nextLine(); //Duplicate name possible
+                /*while(checkDuplicateName(userName)){ uncomment this and method in l.132 to check for duplicate names (might have problems with cmd)
+                    System.out.println("This name is already in use, enter a new one:");
+                    userName = clientInput.nextLine();
+                }*/
                 System.out.print("Hello " + userName + "! Welcome to the Chatroom. Instructions:\n" +
                         "1. Simply type the message to send broadcast to all active clients.\n" +
                         "2. Type '@username<space>yourmessage' without quotes to send message directly to desired client.\n" +
@@ -125,6 +129,9 @@ public class ChatClient {
             System.out.println("Error while writing as client.");
         }
     }
+    /*public boolean checkDuplicateName(String username){ uncomment this and the while loop in l.44, if duplicate names are invalid
+       return ChatServer.mapOfUsers.keySet().stream().anyMatch(s -> s.equals(username));
+    }*/
 
     public static void main(String[] args) {
         ChatClient client = new ChatClient(new Socket());

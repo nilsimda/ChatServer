@@ -9,7 +9,7 @@ import java.util.*;
 public class ChatServer {
     private List<Socket> clients;
     private ServerSocket serverSocket;
-    private static Map<String, Socket> mapOfUsers = new HashMap<>();
+    static Map<String, Socket> mapOfUsers = new HashMap<>();
     private static Map<String, LocalTime> mapOfTimeStayed = new HashMap<>();
 
     public ChatServer(ServerSocket serverSocket, List<Socket> clients) {
