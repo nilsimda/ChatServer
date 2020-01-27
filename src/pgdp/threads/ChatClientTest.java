@@ -56,8 +56,9 @@ class ChatClientTest {
         String expected = "Which ChatServer would you like to connect to?\r\n" + "Port was invalid, try again.\r\n";
         assertEquals(expected, consoleOutPut.toString());
     }
+
     @Test
-    public void testingNonIntegerPortServer(){
+    public void testingNonIntegerPortServer() {
         String input = "java ChatServer port";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         System.setOut(new PrintStream(consoleOutPut));

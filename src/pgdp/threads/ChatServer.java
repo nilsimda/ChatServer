@@ -118,22 +118,20 @@ public class ChatServer {
                             System.out.println("Could not close socket.");
                         }
                     }
-                } else if(msg.charAt(0) == '@') {
+                } else if (msg.charAt(0) == '@') {
                     String userName = msg.substring(1, msg.indexOf(" "));
-                    if(!userName.isEmpty() && mapOfUsers.containsKey(userName)){
+                    if (!userName.isEmpty() && mapOfUsers.containsKey(userName)) {
                         Socket s = mapOfUsers.get(userName);
                         PrintWriter wr = new PrintWriter(s.getOutputStream(), true);
                         wr.println(msg);
-                    }
-                    else
+                    } else
                         writer.println("This user is not in the Chatroom.");
-                }else if(msg.equals("WHOIS")){
+                } else if (msg.equals("WHOIS")) {
                     StringBuilder builder = new StringBuilder();
-                    mapOfTimeStayed.entrySet().stream().forEach(entry ->{
-                        writer.println(entry.getKey() +" since " + entry.getValue());
+                    mapOfTimeStayed.entrySet().stream().forEach(entry -> {
+                        writer.println(entry.getKey() + " since " + entry.getValue());
                     });
-                }
-                else {
+                } else {
                     System.out.println(username + ": " + msg);
                     sendToAll(username + ": " + msg);
                 }
@@ -147,27 +145,30 @@ public class ChatServer {
             }
             try {
                 socket.close();
-            } catch (IOException f){
+            } catch (IOException f) {
                 System.out.println("Could not close socket.");
             }
         }
     }
-    public void close(){
+
+    public void close() {
         try {
             serverSocket.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Could not close ServerSocket.");
         }
     }
-    private String getUserName(Socket socket){
-        Optional<Map.Entry<String, Socket>> opt = mapOfUsers.entrySet().stream().filter(entry ->{
-            if(entry.getValue().equals(socket))
+
+    private String getUserName(Socket socket) {
+        Optional<Map.Entry<String, Socket>> opt = mapOfUsers.entrySet().stream().filter(entry -> {
+            if (entry.getValue().equals(socket))
                 return true;
             else
                 return false;
         }).findFirst();
         return opt.get().getKey();
     }
+
     public static void main(String[] args) {
         try {
             ChatServer chatServer = new ChatServer(new ServerSocket(), new ArrayList<>());

@@ -18,18 +18,17 @@ public class ChatClient {
         System.out.println("Which ChatServer would you like to connect to?");
         Scanner clientInput = new Scanner(System.in);
         String input = clientInput.nextLine();
-        if(input.length() < 15) {
+        if (input.length() < 15) {
             System.out.print("Input was too small.");
             return;
         }
         String firstPart = input.substring(0, 15);
-        if(!input.equals("java ChatClient") && firstPart.equals("java ChatClient")){
+        if (!input.equals("java ChatClient") && firstPart.equals("java ChatClient")) {
             String[] arr = input.split(" ");
-            if(arr.length == 4){
+            if (arr.length == 4) {
                 try {
-                    //String serverAdress = arr[3];
                     int portNumber = Integer.parseInt(arr[2]);
-                }catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     System.out.println("Port was invalid, try again.");
                     return;
                 }
@@ -40,7 +39,11 @@ public class ChatClient {
             try {
                 client = new Socket(arr[3], Integer.parseInt(arr[2]));
                 System.out.println("Enter UserName:");
-                String userName = clientInput.nextLine(); //Duplicate name possible
+                String userName = clientInput.nextLine();
+                while (checkForSpaces(userName)){
+                    System.out.println("Username cannot contain spaces, enter again:");
+                    userName = clientInput.nextLine();
+                }
                 /*while(checkDuplicateName(userName)){ uncomment this and method in l.132 to check for duplicate names (might have problems with cmd)
                     System.out.println("This name is already in use, enter a new one:");
                     userName = clientInput.nextLine();
@@ -74,6 +77,10 @@ public class ChatClient {
                 System.out.println("Enter UserName:");
 
                 String userName = clientInput.nextLine();
+                while (checkForSpaces(userName)){
+                    System.out.println("Username cannot contain spaces, enter again:");
+                    userName = clientInput.nextLine();
+                }
 
                 System.out.print("Hello " + userName + "! Welcome to the Chatroom. Instructions:\n" +
                         "1. Simply type the message to send broadcast to all active clients.\n" +
@@ -113,16 +120,15 @@ public class ChatClient {
 
     public void write(Socket client) {
         try {
-            PrintWriter writer = new PrintWriter(client.getOutputStream(),true);
+            PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
             Scanner userInput = new Scanner(System.in);
             while (true) {
                 String msg = userInput.nextLine();
-                if(msg.equals("LOGOUT")){
+                if (msg.equals("LOGOUT")) {
                     writer.println(msg);
                     client.close();
                     break;
-                }
-                else
+                } else
                     writer.println(msg);
             }
         } catch (IOException e) {
@@ -132,7 +138,9 @@ public class ChatClient {
     /*public boolean checkDuplicateName(String username){ uncomment this and the while loop in l.44, if duplicate names are invalid
        return ChatServer.mapOfUsers.keySet().stream().anyMatch(s -> s.equals(username));
     }*/
-
+    public boolean checkForSpaces(String userName){
+        return userName.contains(" ");
+    }
     public static void main(String[] args) {
         ChatClient client = new ChatClient(new Socket());
         client.connectToServer();
